@@ -8,11 +8,18 @@ const initialItems = [
 ];
 
 function App() {
+
+  const [items, setItems] = useState([]);
+
+  function handleAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
+
   return (
     <div className="App">
       <Logo />
-      <Form />
-      <Packinglist />
+      <Form onAddItems={handleAddItems} />
+      <Packinglist  items={items}/>
       <Stats />
     </div>
   );
@@ -24,7 +31,7 @@ export function Logo() {
   return <h1> Far Away Land</h1>;
 }
 
-export function Form() {
+export function Form( {onAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(5);
 
@@ -34,8 +41,12 @@ export function Form() {
     if (!description) return;  //if description is empty, return an empty result 
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
-
     console.log(newItem);
+
+    onAddItems(newItem); 
+
+    setDescription("");
+    setQuantity(1);
   }
 
   return (
@@ -55,7 +66,7 @@ export function Form() {
           placeholder="Item..."
           value={description}
           onChange={(e) => {
-            
+
             setDescription(e.target.value)}}
         />
         <button> Add </button>
@@ -64,12 +75,12 @@ export function Form() {
   );
 }
 
-export function Packinglist() {
+export function Packinglist({ items }) {
   return (
     <div className="list">
       {" "}
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
