@@ -144,7 +144,7 @@ const data = [
   }
   
   const book = getBook(2);
-
+  console.log(book);
 
   console.log(getBooks())
 
@@ -155,7 +155,6 @@ const data = [
   const [primaryGenre, secondaryGenre, ...tertiaryGenre] = genres;
 
   console.log(primaryGenre, secondaryGenre, tertiaryGenre);
-
 
 //use spread operator to destructure genres
   const newGenre = ["epic fantasy", ...genres];
@@ -171,4 +170,35 @@ const data = [
     pages: 1210,
   };
   console.log(updatedBook); 
+
+  2 + 2 < 3 ? "true" : console.log('false');
+
+  //Arrow functions recap
+  // function getYear(str) {
+  //   return str.split("-")[0];
+  // }
+
+  const getYear = (str) => str.split("-")[0];
+  console.log(getYear(publicationDate))
+
+  //shortcircuiting 
+  // falsy values: 0, '', null, undefined 
+  console.log("jonas" && "Some string"); 
+  // Truthy values are values that are not falsy 
+  console.log(0 || "Matthew")
   
+  //nullish coalescing operator : instead of using && || use the ?? (noalsih capllesacing operator)
+  const count = book.reviews.librarything.reviewsCount ?? "no data"; //ff the is no data, outpet string  
+  count;
+
+  function getTotalReviewCount(book) {
+    const goodreads = book.reviews?.goodreads?.reviewsCount;
+    const libraryanything = book.reviews?.libraryanything?.reviewsCount ?? 0;
+    libraryanything; 
+    goodreads; 
+    return goodreads + libraryanything;
+  }
+
+  console.log(getTotalReviewCount(book));
+
+  // To
