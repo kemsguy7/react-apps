@@ -201,4 +201,13 @@ const data = [
 
   console.log(getTotalReviewCount(book));
 
-  // To
+  // map methods 
+  const books = getBooks()
+  books;
+  const essentialData = books.map((book) => ({  //wrap this in parenthesis to target the object directly
+      title: books.title,
+      author: book.author,   
+      reviewsCount: getTotalReviewCount(book),  
+  }));
+  essentialData;
+
