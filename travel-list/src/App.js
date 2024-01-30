@@ -7,7 +7,7 @@ const initialItems = [
   { id: 3, description: "Charger", quantity: 1, packed: true },
 ];
 
-function App() {
+export default function App() {
 
   const [items, setItems] = useState([]);
 
@@ -25,7 +25,9 @@ function App() {
   );
 }
 
-export default App;
+function handleDeleteItem(id) { 
+    setItems((items) => items.filter((item)=> item.id !== id));
+}
 
 export function Logo() {
   return <h1> Far Away Land</h1>;
@@ -66,7 +68,6 @@ export function Form( {onAddItems }) {
           placeholder="Item..."
           value={description}
           onChange={(e) => {
-
             setDescription(e.target.value)}}
         />
         <button> Add </button>
@@ -98,6 +99,7 @@ function Item({ item }) {
     </li>
   );
 }
+
 
 export function Stats() {
   return (
