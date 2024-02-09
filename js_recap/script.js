@@ -182,7 +182,7 @@ const data = [
   console.log(getYear(publicationDate))
 
   //shortcircuiting 
-  // falsy values: 0, '', null, undefined 
+  // falsy values: 0, '', null, undefined  
   console.log("jonas" && "Some string"); 
   // Truthy values are values that are not falsy 
   console.log(0 || "Matthew")
@@ -190,6 +190,7 @@ const data = [
   //nullish coalescing operator : instead of using && || use the ?? (noalsih capllesacing operator)
   const count = book.reviews.librarything.reviewsCount ?? "no data"; //ff the is no data, outpet string  
   count;
+
 
   function getTotalReviewCount(book) {
     const goodreads = book.reviews?.goodreads?.reviewsCount;
@@ -199,8 +200,8 @@ const data = [
     return goodreads + libraryanything;
   }
 
-  console.log(getTotalReviewCount(book));
-
+  console.log(getTotalReviewCount(book)); 
+ 
   // map methods 
   const books = getBooks()
   books;
@@ -211,3 +212,6 @@ const data = [
   }));
   essentialData;
 
+
+
+  // MAP METHODS

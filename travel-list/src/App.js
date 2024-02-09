@@ -103,7 +103,6 @@ function Item({ item, onDeleteitem }) {
   );
 }
 
-
 export function Stats() {
   return (
     <footer className="stats">
