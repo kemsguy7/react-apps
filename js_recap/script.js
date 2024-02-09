@@ -212,6 +212,28 @@ const data = [
   }));
   essentialData;
 
+  // filter method
+  const longBookWithMovie = books
+    .filter((book) => book.pages > 500)
+    .filter((book) => book.hasMovieAdaptation);
+  longBookWithMovie;
+
+  const adventureBooks = books
+    .filter((books) => books.genres.includes("adventure"))
+    .map((book) => book.title);
+  adventureBooks; 
 
 
-  // MAP METHODS
+  //REDUCE
+  const pagesAllBooks = books.reduce((sum, book) => sum + book.pages, 0);
+  pagesAllBooks;
+
+  // sort method
+// sort is not a funcitonal method, it mutates the original array
+// To solve this issue, first slice the array and then sort it in react 
+  const arr = [3, 5, 7 ,4, 6 ,2 ,1, 0];
+  const sorted = arr.slice().sort((a, b) => b - a);
+  sorted; 
+
+  const sortedByPages  = books.slice().sort((a, b) => a.pages - b.pages);
+  sortedByPages;
