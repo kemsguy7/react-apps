@@ -160,7 +160,6 @@ const data = [
   const newGenre = ["epic fantasy", ...genres];
 
   console.log( newGenre);
-
   const updatedBook = {  //updating book defined above
     ...book,
     //Adding a new property
