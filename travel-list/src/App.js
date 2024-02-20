@@ -31,7 +31,6 @@ export default function App() {
   );
 }
 
-
 export function Logo() {
   return <h1> Far Away Land</h1>;
 }
