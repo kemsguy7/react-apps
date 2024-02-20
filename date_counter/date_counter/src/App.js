@@ -12,7 +12,8 @@ function Counter() {
   const [count, setCount] = useState(0)
   const [step, setStep] = useState(1)
 
-  const date = new Date('Jan 26 2023')
+  const today = new Date()
+  const date = today.toISOString().slice(0, 10)
   date.setDate(date.getDate() + count)
 
   return (
