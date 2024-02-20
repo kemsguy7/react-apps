@@ -47,16 +47,21 @@ function FlashCards() {
   const [selectedId, setSelectedId] = useState(null)
 
   function handleClick(id) {
-    setSelectedId(id !== selectedId ? id : null)
+    setSelectedId(id !== selectedId ? id : null) // if the question id is different from the currently selected one, the result should be the ID, if not, then set it back to null
   }
 
-  return <div className="flashcards">
-    {questions.map((question) => (
-      <div key={question.id} className={question.id}> 
-      <p>
-        {question.id === selectedId ? }
-      </p>
-      </div>
-    ))}
-  </div>
+  return (
+    <div className="flashcards">
+      {questions.map((question) => (
+        <div
+          key={question.id}
+          className={question.id === selectedId ? 'selected' : ''}
+        >
+          <p>
+            {question.id === selectedId ? question.answer : question.question}
+          </p>
+        </div>
+      ))}
+    </div>
+  )
 }
