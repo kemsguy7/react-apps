@@ -87,15 +87,35 @@ export function Form( {onAddItems }) {
 }
 
 export function Packinglist({ items, onDeleteitem , onToggleItems}) {
+    const [sortBy, setSortBy] = useState("input");
+
+    let sortedItems;
+
+    if (sortBy === "input") sortedItems = items; //set this to the normal order in the array in which they were inputted
+
+    if (sortBy === "description")
+    sortedItems = items.slice().sort((a, b) => a.description.localCompare(b.description));
+
+
   return (
     <div className="list">
-      {" "}
       <ul>
         {items.map((item) => (
-          <Item item={item} onDeleteitem={onDeleteitem} onToggleItems={onToggleItems} key={item.id} />
+          <Item item={item} onDeleteitem={onDeleteitem} 
+          onToggleItems={onToggleItems} 
+          key={item.id} />
         ))}
       </ul>
-    </div>
+
+     <div className="actions"> 
+        <select value={sortBy} onChange={e=>setSortBy(e.target.value)}> 
+            <option value='input'> Sort by input order </option>
+            <option value='description'> Sort by description </option>
+            <option value='packed'> Sort by packed status </option>
+        </select>
+     </div>
+
+    </div> 
   );
 }
 
