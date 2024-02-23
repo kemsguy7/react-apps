@@ -24,7 +24,9 @@ export default function App() {
   function handleToggleItem(id) {
     setItems((items) => 
       items.map((item) => 
-        item.id === id ? { ...item, packed: !item.packed } : item)
+        item.id === id ? { ...item, packed: !item.packed } 
+        : item
+        )
       )
   }
 
@@ -33,7 +35,7 @@ export default function App() {
       <Logo />
       <Form onAddItems={handleAddItems} />
       <Packinglist items={items} onDeleteitem={handleDeleteItem} onToggleItems={handleToggleItem}/>
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -55,7 +57,6 @@ export function Form( {onAddItems }) {
     console.log(newItem);
 
     onAddItems(newItem); 
-
     setDescription("");
     setQuantity(1);
   }
@@ -92,16 +93,16 @@ export function Packinglist({ items, onDeleteitem , onToggleItems}) {
       <ul>
         {items.map((item) => (
           <Item item={item} onDeleteitem={onDeleteitem} onToggleItems={onToggleItems} key={item.id} />
-        ))}  
+        ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item, onDeleteitem, onToggleItems}) {
+function Item({ item, onDeleteitem, onToggleItems }) {
   return (
     <li>
-      <input type="checkbox" value={item.packed} onChange={() => onToggleItems(item.id )} />
+      <input type="checkbox" value={item.packed} onChange={() => onToggleItems(item.id)} />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}{" "}
       </span>
@@ -110,12 +111,26 @@ function Item({ item, onDeleteitem, onToggleItems}) {
   );
 }
 
-export function Stats() {
+export function Stats({ items }) {
+
+  if (!items.length)
+    return  (
+      <p className="stats"> 
+        <em>Start Adding Some items to your packing List </em>
+      </p>
+    );
+    
+  const numItems = items.length; 
+  const numPacked = items.filter((item) => item.packed).length;
+  const percentage = Math.round((numPacked / numItems) * 100);
+
   return (
     <footer className="stats">
       <em>
-        {" "}
-        You have X items on your List, and you are already packed X (X%){" "}
+        {percentage === 100 ? 'You got everything ! Ready to go + ': 
+        `You have ${numItems} items on your List, and you are already packed ${numPacked} (${percentage}%) `
+        
+  }
       </em>
     </footer>
   );
