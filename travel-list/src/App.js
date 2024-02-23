@@ -24,7 +24,9 @@ export default function App() {
   function handleToggleItem(id) {
     setItems((items) => 
       items.map((item) => 
-        item.id === id ? { ...item, packed: !item.packed } : item)
+        item.id === id ? { ...item, packed: !item.packed } 
+        : item
+        )
       )
   }
 
@@ -90,17 +92,17 @@ export function Packinglist({ items, onDeleteitem , onToggleItems}) {
       {" "}
       <ul>
         {items.map((item) => (
-          <Item item={item} onDeleteitem={onDeleteitem} onToggleItems key={item.id} />
+          <Item item={item} onDeleteitem={onDeleteitem} onToggleItems={onToggleItems} key={item.id} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item, onDeleteitem }) {
+function Item({ item, onDeleteitem, onToggleItems }) {
   return (
     <li>
-      <input type="checkbox" value={item.packed} onChange={() => {}} />
+      <input type="checkbox" value={item.packed} onChange={() => onToggleItems(item.id)} />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}{" "}
       </span>
@@ -110,10 +112,17 @@ function Item({ item, onDeleteitem }) {
 }
 
 export function Stats({ items }) {
+
+  if (!items.length)
+    return  (
+      <p className="stats"> 
+        <em>Start Adding Some items to your packing List </em>
+      </p>
+    );
+    
   const numItems = items.length; 
   const numPacked = items.filter((item) => item.packed).length;
   const percentage = Math.round((numPacked / numItems) * 100);
-
 
   return (
     <footer className="stats">
