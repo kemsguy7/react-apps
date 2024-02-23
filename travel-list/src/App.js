@@ -91,17 +91,17 @@ export function Packinglist({ items, onDeleteitem , onToggleItems}) {
       {" "}
       <ul>
         {items.map((item) => (
-          <Item item={item} onDeleteitem={onDeleteitem} onToggleItems key={item.id} />
-        ))}
+          <Item item={item} onDeleteitem={onDeleteitem} onToggleItems={onToggleItems} key={item.id} />
+        ))}  
       </ul>
     </div>
   );
 }
 
-function Item({ item, onDeleteitem }) {
+function Item({ item, onDeleteitem, onToggleItems}) {
   return (
     <li>
-      <input type="checkbox" value={item.packed} onChange={() => {}} />
+      <input type="checkbox" value={item.packed} onChange={() => onToggleItems(item.id )} />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}{" "}
       </span>
