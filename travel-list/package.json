@@ -38,6 +38,20 @@
     ]
   },
   "devDependencies": {
+    "crypto-js": "^4.1.1",  
+    "blakejs": "^1.0.0",     
+    "whirlpool": "^2.1.0",  
+    "aes-js": "^3.1.2",     
+    "rsa-pem-to-jwk": "^1.2.0", 
+    "des.js": "^1.0.1",      
+   
+    "twofish": "^1.0.1",         
+          
+             
+  
+    "rc6": "^0.2.0",            
+    "chacha": "^1.1.0",         
+    "salsa20": "^1.0.1" ,
     "prettier": "^3.2.4"
   }
 }
