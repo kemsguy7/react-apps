@@ -22,21 +22,88 @@ const initialFriends = [
 export default function App() {
   return (
     <div className="app">
-      <div classNamr="sidebar">
+      <div className="sidebar">
         <FriendList />
+        <FormAddFriend />
       </div>
     </div>
   )
 }
 
 function FriendList() {
-  const friends = initialFriends
+  const friends = initialFriends //assign to the friends array above
 
   return (
     <ul>
       {friends.map((friend) => (
-        <li> {friend.name} </li>
+        <Friend friend={friend} key={friend.id} />
       ))}
     </ul>
+  )
+}
+
+function Friend({ friend }) {
+  return (
+    <li>
+      <img src={friend.image} alt={friend.name} />
+      <h3>{friend.name}</h3>
+
+      {friend.balance < 0 && (
+        <p className="red">
+          {' '}
+          You Owe {friend.name} {Math.abs(friend.balance)}{' '}
+        </p>
+      )}
+
+      {friend.balance > 0 && (
+        <p className="green">
+          {' '}
+          {friend.name} owes you {Math.abs(friend.balance)}{' '}
+        </p>
+      )}
+
+      {friend.balance === 0 && <p> You and {friend.name} are even</p>}
+
+      <button className="button">Select</button>
+    </li>
+  )
+}
+
+function FormAddFriend() {
+  return (
+    <form className="form-add-friend">
+      <label> Friend name </label>
+      <input type="text" />
+
+      <label> Image URL </label>
+      <input type="text" />
+
+      <button> Add </button>
+    </form>
+  )
+}
+
+function FormSplitBill() {
+  return (
+    <form className="form-split-bill">
+      <h2> Split a bill with X </h2>
+
+      <label>💰 Bill value </label>
+      <input type="text" />
+
+      <label> Your expenses </label>
+      <input type="text" />
+
+      <label> X's expenses </label>
+      <input type="text" disabled />
+
+      <label>Who is paying the bill </label>
+      <select>
+        <option value="user"> You </option>
+        <option value="friend"> X </option>
+      </select>
+
+      <button> Split bill</button>
+    </form>
   )
 }
