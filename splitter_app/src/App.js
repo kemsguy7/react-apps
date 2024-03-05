@@ -48,6 +48,18 @@ export default function App() {
     setShowAddFriend(false) //hide the add friend form on second click
   }
 
+  function handleSplitBill(value) {
+    setFriends((friends) =>
+      friends.map((friend) =>
+        friend.id === selectedFriend.id
+          ? { ...friend, balance: friend.balance + value }
+          : friend
+      )
+    )
+
+    setSelectedFriend(null) //Set the form to null after you've finshed
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -62,7 +74,12 @@ export default function App() {
         </Button>
       </div>
 
-      {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} />}
+      {selectedFriend && (
+        <FormSplitBill
+          selectedFriend={selectedFriend}
+          onSplitBill={handleSplitBill}
+        />
+      )}
     </div>
   )
 }
@@ -159,14 +176,21 @@ function FormAddFriend({ onAddFriend }) {
   )
 }
 
-function FormSplitBill({ selectedFriend }) {
+function FormSplitBill({ selectedFriend, onSplitBill }) {
   const [bill, setBill] = useState('')
-  const [paidByuser, setPaidByUser] = useState('')
-  const paidByFriend = bill ? bill - paidByuser : ''
+  const [paidByUser, setPaidByUser] = useState('')
+  const paidByFriend = bill ? bill - paidByUser : ''
   const [whoIsPaying, setWhoIsPaying] = useState('user')
 
+  function handleSubmit(e) {
+    e.preventDefault()
+
+    if (!bill || !paidByUser) return //if there is no bill or paidByUser, return immediately (nothing is going to happen)
+    onSplitBill(whoIsPaying === 'user' ? paidByFriend : -paidByUser) // if whoIsPaying is user, then the bill is paid by the friend, otherwise the bill is paid by the user
+  }
+
   return (
-    <form className="form-split-bill">
+    <form className="form-split-bill" onSubmit={handleSubmit}>
       <h2> Split a bill with {selectedFriend.name} </h2>
 
       <label>💰 Bill value </label>
@@ -179,10 +203,10 @@ function FormSplitBill({ selectedFriend }) {
       <label> Your expenses </label>
       <input
         type="text"
-        value={paidByuser}
+        value={paidByUser}
         onChange={(e) =>
           setPaidByUser(
-            Number(e.target.value) > bill ? paidByuser : Number(e.target.value)
+            Number(e.target.value) > bill ? paidByUser : Number(e.target.value)
           )
         }
       />
