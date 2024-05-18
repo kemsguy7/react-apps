@@ -65,8 +65,9 @@ export default function App() {
   
     return (
       <nav className="nav-bar">
-        
+        <Logo />
         <Search />
+        <NumResults />
         <p className="num-results">
           Found <strong> X </strong> results
         </p>
@@ -98,9 +99,9 @@ export default function App() {
 
 
   function NumResults() {
-    return <p className="num-results"> 
-        Found <strong> X </strong>
-    </p>
+    return (<p className="num-results"> 
+        Found <strong> X </strong> results
+    </p>)
   }
 
   function Main() {
@@ -116,30 +117,7 @@ export default function App() {
 
     return(
       <main className="main">
-      <div className="box">
-        <button
-          className="btn-toggle"
-          onClick={() => setIsOpen1((open) => !open)}
-        >
-          {isOpen1 ? "–" : "+"}
-        </button>
-        {isOpen1 && (
-          <ul className="list">
-            {movies?.map((movie) => (
-              <li key={movie.imdbID}>
-                <img src={movie.Poster} alt={`${movie.Title} poster`} />
-                <h3>{movie.Title}</h3>
-                <div>
-                  <p>
-                    <span>🗓</span>
-                    <span>{movie.Year}</span>
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      
 
       <div className="box">
         <button
@@ -200,4 +178,32 @@ export default function App() {
       </main>
       )
 
+  }
+
+
+  function ListBox() {
+    return ( <div className="box">
+    <button
+      className="btn-toggle"
+      onClick={() => setIsOpen1((open) => !open)}
+    >
+      {isOpen1 ? "–" : "+"}
+    </button>
+    {isOpen1 && (
+      <ul className="list">
+        {movies?.map((movie) => (
+          <li key={movie.imdbID}>
+            <img src={movie.Poster} alt={`${movie.Title} poster`} />
+            <h3>{movie.Title}</h3>
+            <div>
+              <p>
+                <span>🗓</span>
+                <span>{movie.Year}</span>
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div> );
   }
