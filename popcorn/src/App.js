@@ -97,7 +97,6 @@ export default function App() {
 
   }
 
-
   function NumResults() {
     return (<p className="num-results"> 
         Found <strong> X </strong> results
@@ -124,40 +123,51 @@ export default function App() {
     >
       {isOpen1 ? "–" : "+"}
     </button>
-    {isOpen1 && (
-      <ul className="list">
-        {movies?.map((movie) => (
-          <li key={movie.imdbID}>
-            <img src={movie.Poster} alt={`${movie.Title} poster`} />
-            <h3>{movie.Title}</h3>
-            <div>
-              <p>
-                <span>🗓</span>
-                <span>{movie.Year}</span>
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    )}
+    {isOpen1 && <MovieList />}
   </div> ;
   }
   
+  function MovieList() {
+    const [movies, setMovies] = useState(tempMovieData);
+
+    return (
+    <ul className="list">
+    {movies?.map((movie) => (
+      
+    ))}
+  </ul>
+    )
+  }
+
+  function Movie() {
+    return <li key={movie.imdbID}>
+        <img src={movie.Poster} alt={`${movie.Title} poster`} />
+        <h3>{movie.Title}</h3>
+        <div>
+          <p>
+            <span>⭐️</span>
+            <span>{movie.imdbRating}</span>
+          </p>
+          <p>
+            <span>🌟</span>
+            <span>{movie.userRating}</span>
+          </p>
+          <p>
+            <span>⏳</span>
+            <span>{movie.runtime} min</span>
+          </p>
+        </div>
+      </li> 
+  }
 
   function WatchedBox() {
     const [watched, setWatched] = useState(tempWatchedData);
     const [isOpen2, setIsOpen2] = useState(true);
-
     const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
     const avgUserRating = average(watched.map((movie) => movie.userRating));
     const avgRuntime = average(watched.map((movie) => movie.runtime));
 
-
-    
-    
-    
-    
-return  (<div className="box">
+    return <div className="box">
     <button
       className="btn-toggle"
       onClick={() => setIsOpen2((open) => !open)}
@@ -207,11 +217,11 @@ return  (<div className="box">
                   <span>{movie.runtime} min</span>
                 </p>
               </div>
-            </li> 
+            </li>
           ))}
         </ul>
-      </>  
+      </>
     )}
   </div>
- )
+ 
  }
