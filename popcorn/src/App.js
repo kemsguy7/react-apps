@@ -63,8 +63,22 @@ export default function App() {
         <NumResults movies={movies}/>
       </NavBar>
 
-      
       <Main> 
+
+      {/* 
+        Instead of using children props, props can be passed explicitly using the method below
+        "element will be passes as props in this case to the box component"
+        <Box element ={<MovieList movies={movies}  />} />
+        <Box element={
+          <>
+            <WatchedSummary watched={watched} />
+            <WatchedMoviesList watched={watched} />
+          </>
+        }
+        />
+      
+      */}
+
         <ListBox>
           <MovieList movies={movies} />
         </ListBox>
