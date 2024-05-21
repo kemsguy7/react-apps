@@ -127,20 +127,25 @@ export default function App() {
   </div> ;
   }
   
+        // MovieList component
   function MovieList() {
-    const [movies, setMovies] = useState(tempMovieData);
+    const [movies, setMovies] = useState(tempMovieData); // Managing movies state
 
     return (
-    <ul className="list">
-    {movies?.map((movie) => (
-      
-    ))}
-  </ul>
-    )
+      <ul className="list">
+        {movies?.map((movie) => (
+          // Passing each movie object as a prop to the Movie component
+          <Movie movie={movie} key={movie.imdbID} />
+        ))}
+      </ul>
+    );
   }
 
-  function Movie() {
-    return <li key={movie.imdbID}>
+  // Movie component
+  function Movie({ movie }) {
+    // Receiving the movie prop and rendering its details
+    return (
+      <li>
         <img src={movie.Poster} alt={`${movie.Title} poster`} />
         <h3>{movie.Title}</h3>
         <div>
@@ -157,8 +162,10 @@ export default function App() {
             <span>{movie.runtime} min</span>
           </p>
         </div>
-      </li> 
+      </li>
+    );
   }
+
 
   function WatchedBox() {
     const [watched, setWatched] = useState(tempWatchedData);
