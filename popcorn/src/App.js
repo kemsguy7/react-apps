@@ -52,25 +52,25 @@ const average = (arr) =>
 
 
 export default function App() {
-  return (
-    <>
-      <NavBar />
-      <Main />
+   
+    const [movies, setMovies] = useState(tempMovieData); // Managing movies state
+
+   return ( <>
+      <NavBar movies={movies}/>
+      <Main movies={movies} />
     </>
   );
 }
 
 
-  function NavBar() {
+  function NavBar({ movies }) {
   
     return (
       <nav className="nav-bar">
         <Logo />
         <Search />
-        <NumResults />
-        <p className="num-results">
-          Found <strong> X </strong> results
-        </p>
+        <NumResults movies={movies}/>
+        
       </nav>
     )
   }
@@ -97,23 +97,22 @@ export default function App() {
 
   }
 
-  function NumResults() {
+  function NumResults({ movies }) {
     return (<p className="num-results"> 
-        Found <strong> X </strong> results
+        Found <strong> {movies.length} </strong> results
     </p>)
   }
 
-  function Main() {
+  function Main({ movies }) {
     return(
       <main className="main">
-       <ListBox />
-       <WatchedBox/> 
+       <ListBox movies={movies}/>
+       <WatchedBox /> 
       </main>
       )
   }
 
-  function ListBox() {
-    const [movies, setMovies] = useState(tempMovieData);
+  function ListBox({ movies }) {
     const [isOpen1, setIsOpen1] = useState(true);
 
     return  <div className="box">
@@ -123,13 +122,12 @@ export default function App() {
     >
       {isOpen1 ? "–" : "+"}
     </button>
-    {isOpen1 && <MovieList />}
+    {isOpen1 && <MovieList movies={movies} />}
   </div> ;
   }
   
         // MovieList component
-  function MovieList() {
-    const [movies, setMovies] = useState(tempMovieData); // Managing movies state
+  function MovieList({movies}) {
 
     return (
       <ul className="list">
@@ -181,7 +179,7 @@ export default function App() {
     {isOpen2 && (
       <>
         <WatchedSummary watched={watched} />
-        <WatchedMovieList watch={watched}/>
+        <WatchedMovieList watched={watched}/>
 
       </>
     )}
@@ -218,7 +216,7 @@ export default function App() {
 
  }
 
- function WatchedMovieList( { watched } ) {
+ function WatchedMovieList({ watched } ) {
     return (
       <ul className="list">
         {
@@ -230,7 +228,6 @@ export default function App() {
     )
 }
  
-
  function WatchedMovie({movie}) {
   return <li key={movie.imdbID}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
