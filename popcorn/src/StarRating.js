@@ -25,7 +25,6 @@
     </div>
     }
     
-
     function Star() {
         return (
         <span>
