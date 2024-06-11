@@ -28,8 +28,6 @@
 
 
 
-
-
 // const crypto = require('crypto');
 
 // function generateHashFromUUID(uuid) {
