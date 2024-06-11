@@ -34,7 +34,7 @@ import { useState } from "react";
                 onHoverOut={() => setTempRating(0)}
                 color={color}
                 size={size}
-            />))}    
+            />))}                                    
          </div>
         <p style={textStyle}> {tempRating || ""} </p>
     </div>
