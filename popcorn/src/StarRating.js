@@ -23,7 +23,8 @@ export default function StarRating({
   const [tempRating, setTempRating] = useState(0)
 
   function handleRating(rating) {
-    setRating(rating)
+    setRating(rating) //internal rating
+    onSetRating(rating) //set the external rating
   }
 
   const textStyle = {
