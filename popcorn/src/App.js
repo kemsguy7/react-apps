@@ -95,6 +95,9 @@ export default function App() {
         />
       
       */}
+        {/* <ListBox>
+          {isLoading ? <loader /> : <MovieList movies={movies} />}
+        </ListBox> */}
 
         <ListBox>
           <MovieList movies={movies} />
@@ -103,6 +106,10 @@ export default function App() {
       </Main>
     </>
   )
+}
+
+function Loader() {
+  return <p className="loader"> Loading... </p>
 }
 
 function NavBar({ children }) {
