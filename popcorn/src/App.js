@@ -95,13 +95,7 @@ export default function App() {
         />
       
       */}
-        {/* <ListBox>
-          {isLoading ? <loader /> : <MovieList movies={movies} />}
-        </ListBox> */}
-
-        <Box>
-          <MovieList movies={movies} />
-        </Box>
+        <Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>
 
         <Box>
           <WatchedSummary watched={watched} />
