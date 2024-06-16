@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const tempMovieData = [
   {
@@ -55,10 +55,23 @@ const KEY = 'f84fc31d' //defining the API key
 export default function App() {
   const [movies, setMovies] = useState([]) // Managing movies state
   const [watched, setWatched] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
-  fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-    .then((res) => res.json())
-    .then((data) => console.log(data.Search))
+  const query = 'interstellar'
+
+  useEffect(function () {
+    async function fetchMovies() {
+      setIsLoading(true) // Loading is set to true while data is being fetched
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+      )
+      const data = await res.json()
+      setMovies(data.Search)
+      setIsLoading(false)
+      console.log(data.Search)
+    }
+    fetchMovies()
+  }, []) // useEffect makes the fuction not to run while the component is being rendered but after it has been painted to the screen
 
   return (
     <>
