@@ -53,42 +53,47 @@ const average = (arr) =>
 const KEY = 'f84fc31d' //defining the API key
 
 export default function App() {
+  const [query, setQuery] = useState('')
   const [movies, setMovies] = useState([]) // Managing movies state
   const [watched, setWatched] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const query = 'interstellar'
+  const tempQuery = 'interstellar'
 
-  useEffect(function () {
-    async function fetchMovies() {
-      try {
-        setIsLoading(true) // Loading is set to true while data is being fetched
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
-        )
+  useEffect(
+    function () {
+      async function fetchMovies() {
+        try {
+          setIsLoading(true) // Loading is set to true while data is being fetched
+          setError('') //reset the error state
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          )
 
-        //error handling
-        if (!res.ok)
-          throw new Error('Something went wrong with fetching movies')
+          //error handling
+          if (!res.ok)
+            throw new Error('Something went wrong with fetching movies')
 
-        const data = await res.json()
-        setMovies(data.Search)
-        setIsLoading(false)
-        console.log(data.Search)
-      } catch (err) {
-        console.error(err.message)
-        setError('Something went wrong with fetching movies')
+          const data = await res.json()
+          setMovies(data.Search)
+          setIsLoading(false)
+          //     console.log(data.Search)
+        } catch (err) {
+          console.error(err.message)
+          setError('Something went wrong with fetching movies')
+        }
       }
-    }
-    fetchMovies()
-  }, []) // useEffect makes the fuction not to run while the component is being rendered but after it has been painted to the screen
+      fetchMovies()
+    },
+    [query] //setting the dependency array to the state
+  ) // useEffect makes the fuction not to run while the component is being rendered but after it has been painted to the screen
 
   return (
     <>
       <NavBar>
         <Logo />
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
 
@@ -142,8 +147,7 @@ function Logo() {
   )
 }
 
-function Search() {
-  const [query, setQuery] = useState('')
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
