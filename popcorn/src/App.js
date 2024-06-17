@@ -57,37 +57,37 @@ export default function App() {
   const [movies, setMovies] = useState([]) // Managing movies state
   const [watched, setWatched] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [error, setError] = useState('') //state variable for error handling
 
   const tempQuery = 'interstellar'
 
-  useEffect(
-    function () {
-      async function fetchMovies() {
-        try {
-          setIsLoading(true) // Loading is set to true while data is being fetched
-          setError('') //reset the error state
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
-          )
+  useEffect(function () {
+    async function fetchMovies() {
+      try {
+        setIsLoading(true) // Loading is set to true while data is being fetched
+        setError('') //reset the error state
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+        )
 
-          //error handling
-          if (!res.ok)
-            throw new Error('Something went wrong with fetching movies')
+        //error handling
+        if (!res.ok)
+          throw new Error('Something went wrong with fetching movies')
 
-          const data = await res.json()
-          setMovies(data.Search)
-          setIsLoading(false)
-          //     console.log(data.Search)
-        } catch (err) {
-          console.error(err.message)
-          setError('Something went wrong with fetching movies')
-        }
+        const data = await res.json()
+        if (data.Response === 'False') throw new Error('Movie not found') //if the request not found
+
+        setMovies(data.Search)
+        console.log(data.Search)
+      } catch (err) {
+        console.error(err.message)
+        setError(err.message)
+      } finally {
+        setIsLoading(false)
       }
-      fetchMovies()
-    },
-    [query] //setting the dependency array to the state
-  ) // useEffect makes the fuction not to run while the component is being rendered but after it has been painted to the screen
+    }
+    fetchMovies()
+  }, []) // useEffect makes the fuction not to run while the component is being rendered but after it has been painted to the screen
 
   return (
     <>
@@ -111,7 +111,12 @@ export default function App() {
         />
       
       */}
-        <Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>
+        <Box>
+          {/*  {isLoading ? <Loader/> : <MovieList movies={movies} /> }  */}
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error} />}
+        </Box>
 
         <Box>
           <WatchedSummary watched={watched} />
