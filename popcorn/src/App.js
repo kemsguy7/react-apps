@@ -63,7 +63,12 @@ export default function App() {
   const tempQuery = 'interstellar'
 
   function handleSelectMovie(id) {
-    setSelectedId(id)
+    setSelectedId((selectedId) => (id === selectedId ? null : id))
+  }
+
+  function handleCloseMovie() {
+    //set the selected ID to null
+    setSelectedId(null)
   }
 
   useEffect(
@@ -84,7 +89,7 @@ export default function App() {
           if (data.Response === 'False') throw new Error('Movie not found') //if the request not found
 
           setMovies(data.Search)
-          // console.log(data.Search)
+          console.log(data.Search)
         } catch (err) {
           console.error(err.message)
           setError(err.message)
@@ -140,11 +145,14 @@ export default function App() {
 
         <Box>
           {selectedId ? (
-            <MovieDetails selectedId={selectedId} />
+            <MovieDetails
+              selectedId={selectedId}
+              onCloseMovie={handleCloseMovie}
+            />
           ) : (
             <>
-              <WatchedMovieList watched={watched} />
               <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
             </>
           )}
         </Box>
@@ -239,22 +247,22 @@ function WatchedBox() {
 }*/
 
 // MovieList component
-function MovieList({ movies }) {
+function MovieList({ movies, onSelectMovie }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
         // Passing each movie object as a prop to the Movie component
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie movie={movie} key={movie.imdbID} onSelectMovie={onSelectMovie} />
       ))}
     </ul>
   )
 }
 
 // Movie component
-function Movie({ movie }) {
+function Movie({ movie, onSelectMovie }) {
   // Receiving the movie prop and rendering its details
   return (
-    <li>
+    <li onClick={() => onSelectMovie(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -275,8 +283,15 @@ function Movie({ movie }) {
   )
 }
 
-function MovieDetails({ selectedId }) {
-  return <div className="details"> {selectedId} </div>
+function MovieDetails({ selectedId, onCloseMovie }) {
+  return (
+    <div className="details">
+      <button className="btn-back" onClick={onCloseMovie}>
+        &larr;
+      </button>
+      {selectedId}
+    </div>
+  )
 }
 
 function WatchedSummary({ watched }) {
