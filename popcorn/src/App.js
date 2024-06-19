@@ -324,6 +324,8 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     Genre: genre,
   } = movie //destructure the variable names from the state
 
+  console.log(title)
+
   function handleAdd() {
     const newWatchedMovie = {
       imdbID: selectedId,
@@ -354,6 +356,15 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       getMovieDetails()
     },
     [selectedId]
+  )
+
+  useEffect(
+    function () {
+      if (!title) return
+      //this efect will be used to dynamically change the title of the movie
+      document.title = `Movie | ${title}`
+    },
+    [title]
   )
 
   return (
