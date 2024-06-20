@@ -55,7 +55,7 @@ const average = (arr) =>
 const KEY = 'f84fc31d' //defining the API key
 
 export default function App() {
-  const [query, setQuery] = useState('inception')
+  const [query, setQuery] = useState('')
   const [movies, setMovies] = useState([]) // Managing movies state
   const [watched, setWatched] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -105,9 +105,8 @@ export default function App() {
           setError('') // reset the error state
           console.log(data.Search)
         } catch (err) {
-          console.error(err.message)
-
           if (err.name !== 'AbortError') {
+            console.log(err.message)
             setError(err.message)
           }
         } finally {
@@ -121,8 +120,10 @@ export default function App() {
         //if no movie has been found. This will prevent the fetchMovies function below from running
         setMovies([])
         setError('')
+        return
       }
 
+      handleCloseMovie() //close the movie details when a new search is made
       fetchMovies()
 
       return function () {
@@ -355,12 +356,18 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   useEffect(
     //This efffect uses the escape key to close the movie details
     function () {
-      document.addEventListener('keydown', function (e) {
+      function callback(e) {
         if (e.code === 'Escape') {
           onCloseMovie()
           console.log('CLOSING')
         }
-      })
+      }
+
+      document.addEventListener('keydown', callback)
+
+      return function () {
+        document.removeEventListener('keydown', callback)
+      }
     },
     [onCloseMovie]
   )
