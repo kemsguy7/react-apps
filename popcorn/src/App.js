@@ -352,14 +352,18 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onCloseMovie()
   }
 
-  useEffect(function () {
-    document.addEventListener('keydown', function (e) {
-      if (e.code === 'Escape') {
-        onCloseMovie()
-        console.log('CLOSING')
-      }
-    })
-  })
+  useEffect(
+    //This efffect uses the escape key to close the movie details
+    function () {
+      document.addEventListener('keydown', function (e) {
+        if (e.code === 'Escape') {
+          onCloseMovie()
+          console.log('CLOSING')
+        }
+      })
+    },
+    [onCloseMovie]
+  )
 
   useEffect(
     function () {
