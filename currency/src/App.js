@@ -20,7 +20,6 @@ export default function App() {
       setIsLoading(false)
     }
 
-
     if (fromCur === toCur || toCur === fromCur  ) return setConverted(amount);  //if both currencies are the same
     convert() 
   }, [amount, fromCur, toCur])
