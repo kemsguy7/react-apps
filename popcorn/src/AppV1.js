@@ -60,14 +60,9 @@ export default function App() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('') //state variable for error handling
-  const [selectedId, setSelectedId] = useState('')
+  const [selectedId, setSelectedId] = useState('tt1375666')
 
   //const [watched, setWatched] = useState([])
-
-  const [watched, setWatched] = useState(function () {
-    const storedValue = localStorage.getItem('watched') //get the stored watch movies from local storage
-    return JSON.parse(storedValue) // store the watched movies in the watched state
-  })
 
   const tempQuery = 'interstellar'
 
