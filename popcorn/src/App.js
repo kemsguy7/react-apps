@@ -338,6 +338,8 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
   console.log(title)
 
+  const [avgRating, setAvgRating] = useState(0)
+
   function handleAdd() {
     const newWatchedMovie = {
       imdbID: selectedId,
@@ -351,7 +353,10 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
     onAddWatched(newWatchedMovie)
     onCloseMovie()
-  }
+
+  //   setAvgRating(Number(imdbRating))
+  //   setAvgRating((avgRating) => (avgRating + userRating) / 2) // using a callbalc function to calculate the average rating, beacuse the state is not updated immediately
+  // }
 
   useEffect(
     //This efffect uses the escape key to close the movie details
