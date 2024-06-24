@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect, useRef } from 'react'
-import { useMovies } from './useMovies'
+import { useState, useEffect } from 'react'
 
 import StarRating from './StarRating'
 
@@ -61,14 +60,9 @@ export default function App() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('') //state variable for error handling
-  const [selectedId, setSelectedId] = useState('')
+  const [selectedId, setSelectedId] = useState('tt1375666')
 
   //const [watched, setWatched] = useState([])
-
-  const [watched, setWatched] = useState(function () {
-    const storedValue = localStorage.getItem('watched') //get the stored watch movies from local storage
-    return JSON.parse(storedValue) // store the watched movies in the watched state
-  })
 
   const tempQuery = 'interstellar'
 
@@ -101,14 +95,58 @@ export default function App() {
   )
 
   useEffect(
-    //useEffect to add the watched movies from local storage
     function () {
-      localStorage.setItem('watched', JSON.stringify(watched))
-    },
-    [watched]
-  )
+      const controller = new AbortController() //abort controller to cancel the fetch request
 
-g
+      async function fetchMovies() {
+        try {
+          setIsLoading(true) // Loading is set to true while data is being fetched
+          setError('') //reset the error state
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: AbortController.signal }
+          )
+
+          //error handling
+          if (!res.ok)
+            throw new Error('Something went wrong with fetching movies')
+
+          const data = await res.json()
+          if (data.Response === 'False') throw new Error('Movie not found') //if the request not found
+
+          setMovies(data.Search)
+          setError('') // reset the error state
+          console.log(data.Search)
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.log(err.message)
+            setError(err.message)
+          }
+        } finally {
+          setIsLoading(false)
+        }
+      }
+
+      if (query.length < 2) {
+        // if search characters is less than 2
+
+        //if no movie has been found. This will prevent the fetchMovies function below from running
+        setMovies([])
+        setError('')
+        return
+      }
+
+      handleCloseMovie() //close the movie details when a new search is made
+      fetchMovies()
+
+      return function () {
+        //return to prevent the fetchMovies function from running
+        controller.abort()
+      }
+    },
+    [query]
+  ) // useEffect makes the fuction not to run while the component is being rendered but after it has been painted to the screen
+
   return (
     <>
       <NavBar>
@@ -189,35 +227,6 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
-  const inputEl = useRef(null)
-
-  useEffect(
-    function () {
-      //on page load, this effects focuses the sidebar
-      function callback(e) {
-        if (document.activeElement === inputEl.current) return //check if the active element is our input search element, don't do anything
-
-        if (e.code === 'Enter') {
-          //if the key pressed is enter key, focus the searchBar
-          inputEl.current.focus()
-          setQuery('')
-        }
-      }
-
-      document.addEventListener('keydown', callback) //
-      return () => document.addEventListener('keydown', callback)
-    },
-    [setQuery] //dependency array
-  )
-
-  // useEffect(function() { // Bad way of selecting an element
-  //   const el = document.querySelector(".search");
-  //   console.log(el);
-  //   el.focus()
-  // }, [])
-
-  // using the useRef hook
-
   return (
     <input
       className="search"
@@ -225,7 +234,6 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
-      ref={inputEl} //passing the ref as a prop
     />
   )
 }
@@ -319,13 +327,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [userRating, setUserRating] = useState('')
- 
-  const countRef = useRef(0)  //this ref stores the amount if click on a movie before it's added
-   
-  useEffect(function () {
-    if (userRating) countRef.current++;
-  }, [userRating]) 
-}
+
   //check is the watched movie list already contains the movie to prevent duplication
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId)
   console.log(isWatched)
@@ -360,7 +362,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split('  ').at(0)),
       userRating,
-      countRatingDecisions: countRef.Current
     }
 
     onAddWatched(newWatchedMovie)
