@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useMovies } from './useMovies'
 
 import StarRating from './StarRating'
@@ -59,18 +59,14 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [movies, setMovies] = useState([]) // Managing movies state
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('') //state variable for error handling
-  const [selectedId, setSelectedId] = useState('')
-
-  //const [watched, setWatched] = useState([])
+  useMovies(query)   // our custom hook 
 
   const [watched, setWatched] = useState(function () {
     const storedValue = localStorage.getItem('watched') //get the stored watch movies from local storage
     return JSON.parse(storedValue) // store the watched movies in the watched state
   })
 
-  const tempQuery = 'interstellar'
+//  const tempQuery = 'interstellar'
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id))
