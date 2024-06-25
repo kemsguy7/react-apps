@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 //our custom hook to fetch movies
 
-const KEY = 'f84fc31d' //defining the API key
+const KEY = 'df3e3e36' //defining the API key
 
 export function useMovies(query) {
   const [movies, setMovies] = useState([]) // Managing movies state

@@ -2,21 +2,19 @@ import { useState, useRef, useEffect } from 'react'
 
 import StarRating from './StarRating'
 import { useMovies } from './useMovies'
+import { useLocalStorage } from './useLocalStorage'
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0)
 
-const KEY = 'f84fc31d' //defining the API key
+const KEY = 'df3e3e36' //defining the API key
 
 export default function App() {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState(null) // Managing movies state
   const { movies, isLoading, error } = useMovies(query) // our custom hook
 
-  const [watched, setWatched] = useState(function () {
-    const storedValue = localStorage.getItem('watched') //get the stored watch movies from local storage
-    return JSON.parse(storedValue) || [] // store the watched movies in the watched state
-  })
+  const [watched, setWatched] = useLocalStorage([], 'watched')
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id))
@@ -245,23 +243,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onAddWatched(newWatchedMovie)
     onCloseMovie()
   }
-
-  useEffect(
-    function () {
-      function callback(e) {
-        if (e.code === 'Escape') {
-          onCloseMovie()
-        }
-      }
-
-      document.addEventListener('keydown', callback)
-
-      return function () {
-        document.removeEventListener('keydown', callback)
-      }
-    },
-    [onCloseMovie]
-  )
 
   useEffect(
     function () {
