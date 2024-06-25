@@ -1,54 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { useMovies } from './useMovies'
 
 import StarRating from './StarRating'
-
-const tempMovieData = [
-  {
-    imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
-  },
-  {
-    imdbID: 'tt0133093',
-    Title: 'The Matrix',
-    Year: '1999',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg',
-  },
-  {
-    imdbID: 'tt6751668',
-    Title: 'Parasite',
-    Year: '2019',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg',
-  },
-]
-
-const tempWatchedData = [
-  {
-    imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
-    runtime: 148,
-    imdbRating: 8.8,
-    userRating: 10,
-  },
-  {
-    imdbID: 'tt0088763',
-    Title: 'Back to the Future',
-    Year: '1985',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg',
-    runtime: 116,
-    imdbRating: 8.5,
-    userRating: 9,
-  },
-]
+import { useMovies } from './useMovies'
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0)
@@ -57,16 +10,13 @@ const KEY = 'f84fc31d' //defining the API key
 
 export default function App() {
   const [query, setQuery] = useState('')
-  const [movies, setMovies] = useState([]) // Managing movies state
-
-  useMovies(query)   // our custom hook 
+  const [selectedId, setSelectedId] = useState(null) // Managing movies state
+  const { movies, isLoading, error } = useMovies(query) // our custom hook
 
   const [watched, setWatched] = useState(function () {
     const storedValue = localStorage.getItem('watched') //get the stored watch movies from local storage
-    return JSON.parse(storedValue) // store the watched movies in the watched state
+    return JSON.parse(storedValue) || [] // store the watched movies in the watched state
   })
-
-//  const tempQuery = 'interstellar'
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id))
@@ -79,9 +29,6 @@ export default function App() {
 
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie])
-
-    //localStorage.setItem('wactched', JSON.stringify([...watched, movie])) // will be done inside an effect instead
-    //store the watched movies in local storage
   }
 
   function handleDeleteWatched(id) {
@@ -96,15 +43,6 @@ export default function App() {
     [watched]
   )
 
-  useEffect(
-    //useEffect to add the watched movies from local storage
-    function () {
-      localStorage.setItem('watched', JSON.stringify(watched))
-    },
-    [watched]
-  )
-
-g
   return (
     <>
       <NavBar>
@@ -114,21 +52,7 @@ g
       </NavBar>
 
       <Main>
-        {/* 
-        Instead of using children props, props can be passed explicitly using the method below
-        "element will be passes as props in this case to the box component"
-        <Box element ={<MovieList movies={movies}  />} />
-        <Box element={
-          <>
-            <WatchedSummary watched={watched} />
-            <WatchedMoviesList watched={watched} />
-          </>
-        }
-        />
-      
-      */}
         <Box>
-          {/*  {isLoading ? <Loader/> : <MovieList movies={movies} /> }  */}
           {isLoading && <Loader />}
           {!isLoading && !error && (
             <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
@@ -189,30 +113,20 @@ function Search({ query, setQuery }) {
 
   useEffect(
     function () {
-      //on page load, this effects focuses the sidebar
       function callback(e) {
         if (document.activeElement === inputEl.current) return //check if the active element is our input search element, don't do anything
 
         if (e.code === 'Enter') {
-          //if the key pressed is enter key, focus the searchBar
           inputEl.current.focus()
           setQuery('')
         }
       }
 
-      document.addEventListener('keydown', callback) //
-      return () => document.addEventListener('keydown', callback)
+      document.addEventListener('keydown', callback)
+      return () => document.removeEventListener('keydown', callback)
     },
-    [setQuery] //dependency array
+    [setQuery]
   )
-
-  // useEffect(function() { // Bad way of selecting an element
-  //   const el = document.querySelector(".search");
-  //   console.log(el);
-  //   el.focus()
-  // }, [])
-
-  // using the useRef hook
 
   return (
     <input
@@ -251,44 +165,17 @@ function Box({ children }) {
   )
 }
 
-/*
-function WatchedBox() {
-  const [watched, setWatched] = useState(tempWatchedData)
-  const [isOpen2, setIsOpen2] = useState(true)
-
-  return (
-    <div className="box">
-      <button
-        className="btn-toggle"
-        onClick={() => setIsOpen2((open) => !open)}
-      >
-        {isOpen2 ? '–' : '+'}
-      </button>
-      {isOpen2 && (
-        <>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
-        </>
-      )}
-    </div>
-  )
-}*/
-
-// MovieList component
 function MovieList({ movies, onSelectMovie }) {
   return (
     <ul className="list list-movies">
       {movies?.map((movie) => (
-        // Passing each movie object as a prop to the Movie component
         <Movie movie={movie} key={movie.imdbID} onSelectMovie={onSelectMovie} />
       ))}
     </ul>
   )
 }
 
-// Movie component
-function Movie({ movie, onSelectMovie, onAddWatched }) {
-  // Receiving the movie prop and rendering its details
+function Movie({ movie, onSelectMovie }) {
   return (
     <li onClick={() => onSelectMovie(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
@@ -315,17 +202,17 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [userRating, setUserRating] = useState('')
- 
-  const countRef = useRef(0)  //this ref stores the amount if click on a movie before it's added
-   
-  useEffect(function () {
-    if (userRating) countRef.current++;
-  }, [userRating]) 
-}
-  //check is the watched movie list already contains the movie to prevent duplication
-  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId)
-  console.log(isWatched)
 
+  const countRef = useRef(0) //this ref stores the amount if click on a movie before it's added
+
+  useEffect(
+    function () {
+      if (userRating) countRef.current++
+    },
+    [userRating]
+  )
+
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId)
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
   )?.userRating
@@ -341,11 +228,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     Actors: actors,
     Director: director,
     Genre: genre,
-  } = movie //destructure the variable names from the state
-
-  console.log(title)
-
-  const [avgRating, setAvgRating] = useState(0)
+  } = movie
 
   function handleAdd() {
     const newWatchedMovie = {
@@ -354,25 +237,20 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       year,
       poster,
       imdbRating: Number(imdbRating),
-      runtime: Number(runtime.split('  ').at(0)),
+      runtime: Number(runtime.split(' ')[0]),
       userRating,
-      countRatingDecisions: countRef.Current
+      countRatingDecisions: countRef.current,
     }
 
     onAddWatched(newWatchedMovie)
     onCloseMovie()
-
-    //   setAvgRating(Number(imdbRating))
-    //   setAvgRating((avgRating) => (avgRating + userRating) / 2) // using a callbalc function to calculate the average rating, beacuse the state is not updated immediately
   }
 
   useEffect(
-    //This efffect uses the escape key to close the movie details
     function () {
       function callback(e) {
         if (e.code === 'Escape') {
           onCloseMovie()
-          console.log('CLOSING')
         }
       }
 
@@ -393,8 +271,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
           `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
         )
         const data = await res.json()
-        // console.log(data)
-        setMovie(data) //setting the movie state to the data fetched
+        setMovie(data)
         setIsLoading(false)
       }
       getMovieDetails()
@@ -404,11 +281,11 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
   useEffect(
     function () {
-      if (!title) return //this efect will be used to dynamically change the title of the movie
+      if (!title) return
       document.title = `Movie | ${title}`
 
       return function () {
-        document.title = 'Popcorn' //reset the title of the page when the component is unmounted(back button is clicked)
+        document.title = 'Popcorn'
       }
     },
     [title]
@@ -439,7 +316,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
           <section>
             <div className="rating">
-              {!isWatched ? ( // if the movie has not been rated or added to the watched list
+              {!isWatched ? (
                 <>
                   <StarRating
                     maxRating={10}
@@ -450,12 +327,10 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
                     <button className="btn-add" onClick={handleAdd}>
                       + Add to list
                     </button>
-                  )}{' '}
+                  )}
                 </>
               ) : (
-                // is the movie has been rated and added to the watched list
                 <p>
-                  {' '}
                   You Rated this movie {watchedUserRating}
                   <span>⭐️ </span>
                 </p>

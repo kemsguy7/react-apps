@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
 
+//our custom hook to fetch movies
+
+const KEY = 'f84fc31d' //defining the API key
+
 export function useMovies(query) {
   const [movies, setMovies] = useState([]) // Managing movies state
   const [isLoading, setIsLoading] = useState(false)
@@ -7,6 +11,8 @@ export function useMovies(query) {
 
   useEffect(
     function () {
+      //    callback?.() //callback function to close the movie details when a new search is made
+
       const controller = new AbortController() //abort controller to cancel the fetch request
 
       async function fetchMovies() {
@@ -47,7 +53,7 @@ export function useMovies(query) {
         return
       }
 
-      handleCloseMovie() //close the movie details when a new search is made
+      //   handleCloseMovie() //close the movie details when a new search is made
       fetchMovies()
 
       return function () {
@@ -57,4 +63,6 @@ export function useMovies(query) {
     },
     [query]
   ) // useEffect makes the fuction not to run while the component is being rendered but after it has been painted to the screen
+
+  return { movies, isLoading, error }
 }
