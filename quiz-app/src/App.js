@@ -1,4 +1,4 @@
-//import DateCounter from "./DateCounter";
+// import DateCounter from './DateCounter'
 import { useEffect, useReducer } from 'react'
 import Header from './Header'
 import Main from './Main'
@@ -17,7 +17,7 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case 'dataRecieved':
-      return { ...state, question: action.payload, status: 'ready' }
+      return { ...state, questions: action.payload, status: 'ready' }
     case 'dataFailed':
       return { ...state, status: 'error' }
     case 'start':
@@ -28,7 +28,7 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState)
+  const [{ questions, status }, dispatch] = useReducer(reducer, initialState) // destructuring the state object
 
   const numQuestions = questions.length
 
@@ -41,6 +41,7 @@ export default function App() {
 
   return (
     <div className="app">
+      {/* <DateCounter /> */}
       <Header />
 
       <Main>
