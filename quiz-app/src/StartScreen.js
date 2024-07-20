@@ -7,8 +7,7 @@ function StartScreen({ numQuestions, dispatch }) {
         className="btn btn-ui"
         onClick={() => dispatch({ type: 'start' })}
       >
-        {' '}
-        Let's start{' '}
+        Let's start
       </button>
     </div>
   )
