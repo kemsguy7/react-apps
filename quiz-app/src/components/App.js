@@ -15,6 +15,7 @@ const initialState = {
   status: 'loading',
   index: 0,
   answer: null, // answer is null by default
+  points: 0,
 }
 
 function reducer(state, action) {
